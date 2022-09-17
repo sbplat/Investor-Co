@@ -1,4 +1,5 @@
 from flask import Flask, request
+import analyzer
 import scraper
 
 app = Flask(__name__)
@@ -10,7 +11,10 @@ def app_api():
         if stock == None:
             return {"message": "invalid query"}
         else:
-            return {"message": "ok", "response": scraper.get_article_texts(stock, 5)}
+            article_texts = scraper.get_article_texts(stock, 2)
+            #print(article_texts[0])
+            #print(article_texts[1])
+            return {"message": "ok", "response": [analyzer.summarize_text(article_text["content"]) for article_text in article_texts]}
     except Exception as e:
         return {"message": "error occurred", "exception": str(e)}
 

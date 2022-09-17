@@ -1,10 +1,12 @@
 import cohere
-co = cohere.Client('ojsimMVIln0d6Tsd0yAprJzX47uOi8agV4L4G4Hl')
 
-def summarize_AI(text):
-    response = co.generate(
-    model='xlarge',
-    prompt=f"""The following are passages and short summaries that are two sentences.
+cohere_client = cohere.Client('ojsimMVIln0d6Tsd0yAprJzX47uOi8agV4L4G4Hl')
+
+def summarize_text(text):
+    response = cohere_client.generate(
+        model='xlarge',
+        prompt=f"""\
+The following are passages and short summaries that are two sentences.
 Since officially changing its name to Meta last October, the news for CEO Mark Zuckerberg and the company has been almost all bad. Apple’s iOS privacy update made it more difficult for the company to target ads and the increased popularity of social media rival TikTok has drawn users and advertisers away from the app. Meanwhile, an economic slowdown has caused many companies to pull back on their online marketing spending. In July, Meta said it was expecting a second straight period of declining sales as it reported second-quarter earnings that missed on the top and bottom lines.
 TLDR: Apple, Tik Tok, and other competitors has ve drawn users away from the app. With other social media apps gaining popularity, Meta is falling more compared to the rest of the industry. 
 --
@@ -13,17 +15,16 @@ TLDR: FedEx, a global transport company, experienced their biggest drop in stock
 --
 {text}
 TLDR:""",
-  max_tokens=60, 
-  temperature=0, 
-  k=0, 
-  p=0.75, 
-  frequency_penalty=0, 
-  presence_penalty=0, 
-  stop_sequences=["--"], 
-  return_likelihoods='NONE') 
-    return response.generations[0].text.rstrip("\n--")
+        max_tokens=60,
+        temperature=0,
+        k=0,
+        p=0.75,
+        frequency_penalty=0,
+        presence_penalty=0,
+        stop_sequences=["--"],
+        return_likelihoods='NONE'
+    )
+    return response.generations[0].text.rstrip("\n--").strip()
 
-summary_list = []
-
-for t in texts:
-    print(summarize_AI(t))
+if __name__ == "__main__":
+    print(summarize_text("Tesla has crossed another significant manufacturing milestone. As caught by Electrek, the automaker shared on Saturday that its Texas Gigafactory recently produced its ten thousandth Model Y SUV. The achievement could be good news for those hoping to buy a Cybertruck next year. Tesla plans to build the pickup truck primarily in Texas. The automaker initially expected to begin volume production in 2021 but then delayed the Cybertruck to 2022 and then 2023."))
