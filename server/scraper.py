@@ -17,16 +17,10 @@ def get_ticker(name):
         if name in s:
             return symbol[i]
 
-ticker = get_ticker("Zynex")
-
 def get_price(symbol):
     ticker = yf.Ticker(symbol)
     todays_data = ticker.history(period='1d')
     return round(todays_data['Close'][0], 2)
-
-print(get_price(ticker))
-
-
 
 def get_articles(name):
     google_news.clear()
@@ -57,6 +51,12 @@ def get_article_texts(name, max_texts):
 
 if __name__ == "__main__":
     print("in main")
+
+    ticker = get_ticker("Zynex")
+    print(ticker)
+    print(get_price(ticker))
+
     print(get_article_texts("tesla", 1)[0])
     print("\n" * 3)
     print(get_article_texts("google", 1)[0])
+

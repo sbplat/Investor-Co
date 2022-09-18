@@ -4,7 +4,8 @@ import scraper
 
 app = Flask(__name__)
 
-@app.route("/stock", methods=["GET"])
+# /analyze?query=amazon
+@app.route("/analyze", methods=["GET"])
 def app_api():
     stock = request.args.get("query", default=None, type=str)
     try:
@@ -26,5 +27,9 @@ def app_api():
 
     except Exception as e:
         return {"message": "error occurred", "exception": str(e)}
+
+@app.route("/add_user", methods=["POST"])
+def app_add_user():
+    ...
 
 app.run(port=3001)
