@@ -1,4 +1,5 @@
 import cohere
+from cohere.classify import Example
 
 cohere_client = cohere.Client('ojsimMVIln0d6Tsd0yAprJzX47uOi8agV4L4G4Hl')
 
@@ -26,5 +27,27 @@ TLDR:""",
     )
     return response.generations[0].text.rstrip("\n--").strip()
 
+def classification(summary):
+    response = cohere_client.classify(
+        model='large',
+        inputs=[summary],
+        examples=[
+            Example("Tesla, a car company, has produced 10,000 Model Y cars in Texas. The company is celebrating the milestone and is looking forward to producing more.", "Positive"),
+            Example("A Tesla owner in Canada claimed he is locked out of his vehicle after the battery died, with the electric automaker telling him the replacement would cost $26,000 (Rs 20 lakh).", "Negative"), 
+            Example("Tesla, a car company, is being sued by two employees who were laid off. The company is being accused of violating federal laws by requiring workers to sign separation agreements.", "Negative"), 
+            Example("The CEO of Facebook, Mark Zuckerberg, has successfully navigated the company to one of the most valuable companies in the world", "Positive"), 
+            Example("Facebook is losing out on communication with businesses. With the pandemic, businesses are losing out on communication with customers.", "Negative"), 
+            Example("Meta Platforms Inc. stock underperforms Friday when compared to competitors.", "Negative"), 
+            Example("Meta, a social media company, has partnered with MeitY to launch a startup accelerator program. The program will provide grants of up to INR 20 Lakh each for 40 startups involved in technological innovation.", "Positive"), 
+            Example("The smartphone accessories market is expected to grow by 2029. The market is expected to grow due to the increase in the number of smartphone users.", "Positive"), 
+            Example("Apple Watch Series 6 is the best smartwatch on the market. It has a lot of features that make it stand out from the rest.", "Positive"), 
+            Example("Microsoft is looking to build a fiber optic cable that will connect Seattle to Japan. This will allow Microsoft to have a faster connection to Japan, which will allow them to have a faster connection to the rest of the world", "Positive"), 
+            Example("The U.S military has finally received the first order of Microsoft\'s HoloLens goggles. The military has been testing the goggles for a while now and has been impressed with the results.", "Positive"),
+            Example("This angers some MPs who do not want to see increased funding for a company whose software was recently affected by two large-scale cyberattacks.", "Negative")
+            ])
+    return response.classifications[0].prediction == "Positive"
+
 if __name__ == "__main__":
-    print(summarize_text("Tesla has crossed another significant manufacturing milestone. As caught by Electrek, the automaker shared on Saturday that its Texas Gigafactory recently produced its ten thousandth Model Y SUV. The achievement could be good news for those hoping to buy a Cybertruck next year. Tesla plans to build the pickup truck primarily in Texas. The automaker initially expected to begin volume production in 2021 but then delayed the Cybertruck to 2022 and then 2023."))
+    summary = summarize_text("Tesla has crossed another significant manufacturing milestone. As caught by Electrek, the automaker shared on Saturday that its Texas Gigafactory recently produced its ten thousandth Model Y SUV. The achievement could be good news for those hoping to buy a Cybertruck next year. Tesla plans to build the pickup truck primarily in Texas. The automaker initially expected to begin volume production in 2021 but then delayed the Cybertruck to 2022 and then 2023.")
+    print(summary)
+    print(classification(summary))

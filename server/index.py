@@ -11,7 +11,7 @@ def app_api():
         if stock == None:
             return {"message": "invalid query"}
         else:
-            article_texts = scraper.get_article_texts(stock, 2)
+            article_texts = scraper.get_article_texts(stock, 3)
             #print(article_texts[0])
             #print(article_texts[1])
             return {"message": "ok", "response": [analyzer.summarize_text(article_text["content"]) for article_text in article_texts]}
