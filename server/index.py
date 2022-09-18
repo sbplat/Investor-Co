@@ -17,9 +17,10 @@ def app_api():
             response_list = []
 
             for article_text in article_texts:
+                text_title = article_text["title"]
                 text_summary = analyzer.summarize_text(article_text["content"])
                 text_classification = analyzer.classify_text(text_summary)
-                response_list.append({"summary": text_summary, "positive": text_classification})
+                response_list.append({"title": text_title, "summary": text_summary, "positive": text_classification})
 
             return {"message": "ok", "response": response_list}
 
