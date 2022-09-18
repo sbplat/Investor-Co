@@ -27,7 +27,7 @@ TLDR:""",
     )
     return response.generations[0].text.rstrip("\n--").strip()
 
-def classification(summary):
+def classify_text(summary):
     response = cohere_client.classify(
         model='large',
         inputs=[summary],
@@ -44,10 +44,12 @@ def classification(summary):
             Example("Microsoft is looking to build a fiber optic cable that will connect Seattle to Japan. This will allow Microsoft to have a faster connection to Japan, which will allow them to have a faster connection to the rest of the world", "Positive"), 
             Example("The U.S military has finally received the first order of Microsoft\'s HoloLens goggles. The military has been testing the goggles for a while now and has been impressed with the results.", "Positive"),
             Example("This angers some MPs who do not want to see increased funding for a company whose software was recently affected by two large-scale cyberattacks.", "Negative")
-            ])
+        ]
+    )
+
     return response.classifications[0].prediction == "Positive"
 
 if __name__ == "__main__":
     summary = summarize_text("Tesla has crossed another significant manufacturing milestone. As caught by Electrek, the automaker shared on Saturday that its Texas Gigafactory recently produced its ten thousandth Model Y SUV. The achievement could be good news for those hoping to buy a Cybertruck next year. Tesla plans to build the pickup truck primarily in Texas. The automaker initially expected to begin volume production in 2021 but then delayed the Cybertruck to 2022 and then 2023.")
     print(summary)
-    print(classification(summary))
+    print(classify_text(summary))

@@ -14,7 +14,15 @@ def app_api():
             article_texts = scraper.get_article_texts(stock, 3)
             #print(article_texts[0])
             #print(article_texts[1])
-            return {"message": "ok", "response": [analyzer.summarize_text(article_text["content"]) for article_text in article_texts]}
+            response_list = []
+
+            for article_text in article_texts:
+                text_summary = analyzer.summarize_text(article_text["content"])
+                text_classification = analyzer.classify_text(text_summary)
+                response_list.append({"summary": text_summary, "positive": text_classification})
+
+            return {"message": "ok", "response": response_list}
+
     except Exception as e:
         return {"message": "error occurred", "exception": str(e)}
 
