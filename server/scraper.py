@@ -1,8 +1,32 @@
+from html.entities import name2codepoint
+from webbrowser import get
 from GoogleNews import GoogleNews
 from goose3 import Goose
+import pandas as pd
+import yfinance as yf
 
 google_news = GoogleNews()
 goose = Goose()
+
+ticker_list = pd.read_csv('ticker_list.csv')
+symbol = ticker_list['Symbol']
+name_list = ticker_list['Name']
+
+def get_ticker(name):
+    for i, s in enumerate(name_list):
+        if name in s:
+            return symbol[i]
+
+ticker = get_ticker("Zynex")
+
+def get_price(symbol):
+    ticker = yf.Ticker(symbol)
+    todays_data = ticker.history(period='1d')
+    return round(todays_data['Close'][0], 2)
+
+print(get_price(ticker))
+
+
 
 def get_articles(name):
     google_news.clear()
@@ -29,6 +53,7 @@ def get_article_texts(name, max_texts):
         article_texts.append(extract_article(url))
 
     return article_texts
+
 
 if __name__ == "__main__":
     print("in main")
